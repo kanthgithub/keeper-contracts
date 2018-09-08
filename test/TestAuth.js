@@ -27,21 +27,22 @@ contract('OceanAuth', (accounts) => {
             const token = await OceanToken.deployed()
             const market = await OceanMarket.deployed()
             const auth = await OceanAuth.deployed()
+            const scale = 1000000000000000000
 
             const str = 'resource'
             const resourceId = await market.generateId(str, { from: accounts[0] })
-            const resourcePrice = 100
+            const resourcePrice = 100 * scale
             // 1. provider register dataset
             await market.register(resourceId, resourcePrice, { from: accounts[0] })
             console.log('publisher registers asset with id = ', resourceId)
 
             // consumer accounts[1] request initial funds to play
             console.log(accounts[1])
-            await market.requestTokens(1000, { from: accounts[1] })
+            await market.requestTokens(1000 * scale, { from: accounts[1] })
             const bal = await token.balanceOf.call(accounts[1])
-            console.log(`consumer has balance := ${bal.valueOf()} now`)
+            console.log(`consumer has balance := ${bal.valueOf() / scale} now`)
             // consumer approve market to withdraw amount of token from his account
-            await token.approve(market.address, 200, { from: accounts[1] })
+            await token.approve(market.address, 200 * scale, { from: accounts[1] })
 
             // 2. consumer initiate an access request
             const modulusBit = 512
@@ -74,10 +75,10 @@ contract('OceanAuth', (accounts) => {
 
             // 4. consumer make payment
             const bal1 = await token.balanceOf.call(market.address)
-            console.log(`market has balance := ${bal1.valueOf()} before payment`)
-            await market.sendPayment(accessId, accounts[0], 100, 9999999999, { from: accounts[1] })
+            console.log(`market has balance := ${bal1.valueOf() / scale} before payment`)
+            await market.sendPayment(accessId, accounts[0], 100 * scale, 9999999999, { from: accounts[1] })
             const bal2 = await token.balanceOf.call(market.address)
-            console.log(`market has balance := ${bal2.valueOf()} after payment`)
+            console.log(`market has balance := ${bal2.valueOf() / scale} after payment`)
             console.log('consumer has paid the order')
 
             // 5. provider delivery the encrypted JWT token
@@ -122,10 +123,10 @@ contract('OceanAuth', (accounts) => {
 
             // check balance
             const pbal = await token.balanceOf.call(accounts[0])
-            console.log(`provider has balance := ${pbal.valueOf()} now`)
+            console.log(`provider has balance := ${pbal.valueOf() / scale} now`)
 
             const mbal = await token.balanceOf.call(market.address)
-            console.log(`market has balance := ${mbal.valueOf()} now`)
+            console.log(`market has balance := ${mbal.valueOf() / scale} now`)
 
             // stop listening to event
             requestAccessEvent.stopWatching()

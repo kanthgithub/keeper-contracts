@@ -19,8 +19,8 @@ contract OceanToken is StandardToken {
     string public constant symbol = 'OCN';                              // Set the token symbol for display
 
     // SUPPLY
-    uint8 public constant decimals = 0;                               // Set the number of decimals for display
-    uint256 public constant TOTAL_SUPPLY = 1400000000;                 // OceanToken total supply
+    uint8 public constant decimals = 18;                               // Set the number of decimals for display
+    uint256 public constant TOTAL_SUPPLY = 1400000000 * 10 ** 18;                 // OceanToken total supply
 
     // EMIT TOKENS
     address public _receiver = 0x0;                                   // address to receive TOKENS

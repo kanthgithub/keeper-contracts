@@ -39,7 +39,7 @@ contract OceanMarket is Ownable {
 
     // limit period for reques of tokens
     mapping (address => uint256) tokenRequest; // mapping from address to last time of request
-    uint256 maxAmount = 10000;                      // max amount of tokens user can get for each request
+    uint256 maxAmount = 10000 * 10 ** 18;         // max amount of tokens user can get for each request
     uint256 minPeriod = 0;                        // min amount of time to wait before request token again
 
     // limit access to refund payment
@@ -93,6 +93,8 @@ contract OceanMarket is Ownable {
         tcr = OceanRegistry(_tcrAddress);
         // set the token receiver to be marketplace
         mToken.setReceiver(address(this));
+        // create market contract instance in tcr
+        tcr.getMarketInstance(address(this));
     }
 
     /**
@@ -207,13 +209,12 @@ contract OceanMarket is Ownable {
     }
 
     /**
-    * @dev OceanMarket changes the asset status according to the voting result of OceanRegistry
-    * @param listing the identifier of voting
+    * @dev OceanRegistry changes the asset status according to the voting result
     * @param assetId the integer identifier of asset in the voting
     * @return valid Boolean indication of listing is whitelisted
     */
-    function changeListingStatus(bytes32 listing, bytes32 assetId) public returns(bool){
-        if (!tcr.isWhitelisted(listing) ){
+    function changeListingStatus(bytes32 assetId) public returns(bool){
+        if (!tcr.isWhitelisted(assetId) ){
             mAssets[assetId].active = false;
         }
         return true;
