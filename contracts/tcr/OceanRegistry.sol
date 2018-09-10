@@ -279,9 +279,9 @@ contract OceanRegistry is Ownable {
     */
     function changeListingStatus(bytes32 _listingHash) public {
         Listing storage listing = listings[_listingHash];
-        // update status of asset according to voting result (isWhitelisted)
+        // disable asset according if voting result is negative
         if(listing.objType == ListingType.Asset){
-            market.changeListingStatus(_listingHash);
+            market.changeAssetStatus(_listingHash);
         }
     }
 
@@ -297,8 +297,6 @@ contract OceanRegistry is Ownable {
             whitelistApplication(_listingHash);
         } else if (challengeCanBeResolved(_listingHash)) {
             resolveChallenge(_listingHash);
-            // update asset or actor status if not whitelisted
-            changeListingStatus(_listingHash);
         } else {
             revert();
         }
