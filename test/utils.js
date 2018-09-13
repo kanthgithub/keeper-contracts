@@ -11,7 +11,7 @@ const ethQuery = new Eth(new HttpProvider('http://localhost:7545'))
 
 const PLCRVoting = artifacts.require('PLCRVoting.sol')
 const Registry = artifacts.require('OceanRegistry.sol')
-const Token = artifacts.require('EIP20.sol')
+const Token = artifacts.require('ERC20.sol')
 
 const BN = small => new Eth.BN(small.toString(10), 10)
 
