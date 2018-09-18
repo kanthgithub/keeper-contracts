@@ -10,14 +10,12 @@ cache:
     - node_modules
 
 env:
-  - SOLIDITY_COVERAGE=true
-  - SOLC_NIGHTLY=true
+  - SOLIDITY_COVERAGE=true SOLC_NIGHTLY=true
 
 matrix:
   fast_finish: true
   allow_failures:
-    - env: SOLIDITY_COVERAGE=true
-    - env: SOLC_NIGHTLY=true
+    - env: SOLIDITY_COVERAGE=true SOLC_NIGHTLY=true
 
 before_install:
   - npm install -g npm
@@ -52,7 +50,6 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-
   - provider: pypi
     distributions: sdist bdist_wheel
     user: ${PYPI_USER}
@@ -61,8 +58,6 @@ deploy:
       tags: true
       repo: oceanprotocol/keeper-contracts
       python: 3.6
-
-
 #  - provider: releases
 #    api_key: ${GITHUB_OAUTH_TOKEN}
 #    skip_cleanup: true
